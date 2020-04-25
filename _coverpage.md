@@ -1,12 +1,14 @@
-<p align="center">
-<img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2481424715,2807309609&fm=26&gp=0.jpg" width="200" height="200"/>
-</p>
-<h1 align="center">docsify-demo</h1>
 
-[常用资源](https://shimo.im/docs/MuiACIg1HlYfVxrj/)
-[GitHub](https://github.com/Snailclimb/docsify-demo)
-[开始阅读](#docsify-demo)
+![logo](https://docsify.js.org/_media/icon.svg)
 
+# 豆瓣影音
 
+> 使用Vue全家桶+Node.js搭建的小型全栈项目.
 
+* 前端框架：vue-cli、vue-router、axios、vuex
+* UI类库：Mint-UI、Vant
+* 后端数据接口：Express、MongoDB
+
+[GitHub](https://github.com/Hanxueqing/Douban-Movie.git)
+[Get Started](#flower)
 

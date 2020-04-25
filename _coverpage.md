@@ -1,14 +1,14 @@
 
 ![logo](https://docsify.js.org/_media/icon.svg)
 
-# 豆瓣影音
+# 云架构微服务开发手记
 
-> 使用Vue全家桶+Node.js搭建的小型全栈项目.
+> 一个高龄程序猿的在线工作备忘.
 
-* 前端框架：vue-cli、vue-router、axios、vuex
-* UI类库：Mint-UI、Vant
-* 后端数据接口：Express、MongoDB
+* Java、Shell知识分享
+* Oracle、DB2、Mysql及Redis、MangoDb等NoSQL知识分享
+* SpringBoot、SpringCloud、Dubbo、Eurika等微服务框架记录
 
-[GitHub](https://github.com/Hanxueqing/Douban-Movie.git)
-[Get Started](#flower)
+[GitHub](https://github.com/xsyubin/docsify.git)
+[Get Started](#在线工作备忘记录)
 

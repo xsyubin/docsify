@@ -4,4 +4,4 @@
 # 版本控制系统
 # cvs
 # svn
-# [git](./git.md)
+# [git](./docs/jdk/git.md)

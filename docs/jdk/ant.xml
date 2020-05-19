@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--        default：默认执行的target，name：当前打包项目名称-->
+<project default="jar" name="retail_client">
+
+    <!--    引入property组-->
+    <!--    <loadproperties/>-->
+
+    <!--    property定义常量-->
+
+    <!--这里引入的编译器是eclipse用的，需要将eclipse带的编译器ecj.jar拷贝到%ANT_HOME%\lib下，比jdk自带的javac好很多，删掉改行则使用jdk自带的-->
+    <!--    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>-->
+
+
+    <property name="lib.dir" value="lib"/>
+
+    <property name="src.dir.client" value="retail_client"/>
+    <property name="src.dir.service" value="retail_service"/>
+    <property name="src.dir.update" value="retail_update"/>
+
+    <property name="classes.dir" value="bin"/>
+    <property name="classes.dir.client" value="bin/client"/>
+    <property name="classes.dir.update" value="bin/update"/>
+
+    <property name="output.dir" value="."/>
+    <property name="jarname.client" value="retail_client.jar"/>
+    <property name="jarname.service" value="retail_service.jar"/>
+    <property name="jarname.update" value="retail_update.jar"/>
+    <property name="mainclass.client" value="com.longj.eap.retail.RetailClient"/>
+    <property name="mainclass.update" value="com.longj.eap.retail.update.RetailUpdate"/>
+
+    <!--配置作者，重新定义则覆盖-->
+    <property name="version" value="1.0.0.0"/>
+    <property name="encoding" value="UTF-8"/>
+    <property name="sourcejdk" value="1.8"/>
+    <property name="targetjdk" value="1.8"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <!--依赖外部类路径，编译时使用到，程序运行或者部署也用到-->
+
+    <!-- 第三方jar包的路径 -->
+    <path id="lib-classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="update-lib">
+        <fileset dir="${src.dir.update}/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="client-lib">
+        <fileset dir="${src.dir.client}/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+
+    <!-- 1. 初始化工作，如创建目录等 -->
+    <target name="init">
+        <echo level="info">init...</echo>
+        <delete dir="${classes.dir}"/>
+        <delete dir="${output.dir}/${jarname.client}"/>
+        <delete dir="${output.dir}/${jarname.service}"/>
+        <delete dir="${output.dir}/${jarname.update}"/>
+
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${classes.dir.client}"/>
+        <mkdir dir="${classes.dir.update}"/>
+    </target>
+
+
+    <target name="compile" depends="init">
+
+        <echo level="info">compile...</echo>
+        <javac target="${targetjdk}" source="${sourcejdk}" srcdir="${src.dir.client};${src.dir.service}"
+               destdir="${classes.dir.client}" debug="on" debuglevel="${debuglevel}">
+            <compilerarg line="-encoding UTF-8"/>
+            <classpath refid="lib-classpath"/>
+        </javac>
+
+        <copy todir="${classes.dir.client}" >
+            <fileset dir="${src.dir.client}" >
+                <include name="**/*.xml"/>
+                <include name="**/*.properties"/>
+            </fileset>
+            <fileset dir="${src.dir.service}" >
+                <include name="**/*.xml"/>
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+
+
+        <javac target="${targetjdk}" source="${sourcejdk}" srcdir="${src.dir.update}" destdir="${classes.dir.update}"
+               debug="on" debuglevel="${debuglevel}">
+            <compilerarg line="-encoding UTF-8"/>
+            <classpath refid="lib-classpath"/>
+        </javac>
+
+        <copy todir="${classes.dir.update}" >
+            <fileset dir="${src.dir.update}" >
+                <include name="**/*.xml"/>
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+
+
+    </target>
+
+
+    <!-- 3. 打包jar文件 -->
+    <target name="jar" depends="compile">
+
+        <pathconvert property="mf.client-lib" pathsep=" ">
+            <mapper>
+                <chainedmapper>
+                    <!-- remove absolute path -->
+                    <flattenmapper />
+                    <!-- add lib/ prefix -->
+                    <globmapper from="*" to="./lib/*" />
+                </chainedmapper>
+            </mapper>
+            <path refid="client-lib"/>
+        </pathconvert>
+
+
+        <pathconvert property="mf.update-lib" pathsep=" ">
+            <mapper>
+                <chainedmapper>
+                    <!-- remove absolute path -->
+                    <flattenmapper />
+                    <!-- add lib/ prefix -->
+                    <globmapper from="*" to="./lib/*" />
+                </chainedmapper>
+            </mapper>
+            <path refid="update-lib"/>
+        </pathconvert>
+
+        <jar destfile="${output.dir}/${jarname.client}">
+            <fileset dir="${classes.dir.client}">
+                <exclude name="com/longj/eap/retail/service/"/>
+            </fileset>
+            <manifest>
+                <attribute name="Class-Path" value="${mf.client-lib} ./${jarname.service}" />
+                <attribute name="Main-Class" value="${mainclass.client}"/>
+            </manifest>
+
+        </jar>
+
+
+        <jar destfile="${output.dir}/${jarname.service}">
+            <fileset dir="${classes.dir.client}">
+                <include name="com/longj/eap/retail/service/**/*"/>
+            </fileset>
+        </jar>
+
+
+        <jar destfile="${output.dir}/${jarname.update}" basedir="${classes.dir.update}">
+            <fileset dir="${classes.dir.update}">
+                <include name="**/*.properties"></include>
+                <include name="**/*.xml"></include>
+            </fileset>
+            <manifest>
+                <attribute name="Class-Path" value="${mf.update-lib}" />
+                <attribute name="Main-Class" value="${mainclass.update}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!--    引入另一个构建文件-->
+    <!--    <import file="./build_common.xml" />-->
+</project>

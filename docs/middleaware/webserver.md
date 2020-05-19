@@ -1,6 +1,7 @@
 ------
 
 
+# 中间件WEB服务
 
 # Tomcat
 # Jetty
@@ -26,6 +27,18 @@ cd /usr/local/nginx/conf
 vim nginx.conf，设置user参数如下：
 
 user nginx nginx
+
+
+### 开启gzip压缩
+```
+    gzip on;
+    gzip_buffers 32 4K;
+    gzip_comp_level 3;
+    gzip_min_length 1k;
+    gzip_types text/plain application/javascript application/x-javascript text/javascript text/xml text/css;
+    gzip_disable "MSIE [1-6]\.";
+    gzip_vary on;
+```
 
 ## 注册服务
 vim /lib/systemd/system/nginx.service
